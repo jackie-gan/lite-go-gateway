@@ -11,7 +11,6 @@ func handler(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("/test", handler)
-	if err := http.ListenAndServe(":8099", nil); err == nil {
-		fmt.Println("server started on port 8099...")
-	}
+	fmt.Println("server started on port 8099...")
+	http.ListenAndServe(":8099", nil)
 }
