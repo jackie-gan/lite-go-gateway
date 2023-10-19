@@ -7,14 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProxyMiddleware() gin.HandlerFunc {
+func ProxyMiddleware(proxyTarget string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		remote, err := url.Parse("http://xxx:9099")
+		target, err := url.Parse(proxyTarget)
 		if err != nil {
 			panic(err)
 		}
 
-		reverseProxy := httputil.NewSingleHostReverseProxy(remote)
+		reverseProxy := httputil.NewSingleHostReverseProxy(target)
 
 		reverseProxy.ServeHTTP(c.Writer, c.Request)
 	}
