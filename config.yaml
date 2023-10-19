@@ -1,4 +1,4 @@
 proxy_paths:
   - name: sandbox
-  - prefix: /sandbox
-  - url: http://sandboxserver:8080
+    prefix: /sandbox
+    url: http://sandboxserver:8080
