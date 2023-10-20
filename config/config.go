@@ -5,6 +5,8 @@ import (
 	"sync/atomic"
 
 	"gopkg.in/yaml.v3"
+
+	"lite-gateway/log"
 )
 
 type Path struct {
@@ -24,6 +26,7 @@ var configStore atomic.Value
 func InitConfig() error {
 	data, err := os.ReadFile(configFileName)
 	if err != nil {
+		log.Logger.Sugar().Error("Read Config File Fail", err)
 		return err
 	}
 
