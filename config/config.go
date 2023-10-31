@@ -1,12 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"os"
-	"sync/atomic"
 
 	"gopkg.in/yaml.v3"
-
-	"lite-gateway/log"
 )
 
 type Path struct {
@@ -17,30 +15,29 @@ type Path struct {
 
 type Config struct {
 	ProxyPaths []*Path `yaml:"proxy_paths"`
+	Log        struct {
+		Path string `yaml:"path"`
+		Age  int32  `yaml:"age"`
+	} `yaml:"log"`
 }
 
 const configFileName = "config.yaml"
 
-var configStore atomic.Value
+var C *Config = &Config{}
 
 func InitConfig() error {
 	data, err := os.ReadFile(configFileName)
 	if err != nil {
-		log.Logger.Sugar().Error("Read Config File Fail", err)
+		fmt.Println("Read Config File Fail", err)
 		return err
 	}
 
-	config := &Config{}
-	err = yaml.Unmarshal(data, config)
+	err = yaml.Unmarshal(data, C)
 	if err != nil {
 		return err
 	}
 
-	configStore.Store(config)
+	fmt.Print(C)
 
 	return nil
-}
-
-func GetConfig() *Config {
-	return configStore.Load().(*Config)
 }

@@ -9,27 +9,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const serverPort = "8080"
+const SERVER_PORT = "8080"
 
-func main() {
-	log.InitLogger()
-	defer log.Sync()
-
+func before() {
 	if config.InitConfig() != nil {
 		os.Exit(1)
 	}
+
+	log.InitLog()
+}
+
+func main() {
+	before()
 
 	gw := gin.Default()
 
 	gw.Use(middleware.AuthMiddleware())
 
-	paths := config.GetConfig().ProxyPaths
+	paths := config.C.ProxyPaths
 	for _, path := range paths {
 		gw.Any(path.Prefix, middleware.ProxyMiddleware(path.Url))
 	}
 
-	log.Logger.Sugar().Infof("Server start at %s", serverPort)
-	if err := gw.Run(":" + serverPort); err != nil {
+	log.Main.Infof("Server start at %s", SERVER_PORT)
+	if err := gw.Run(":" + SERVER_PORT); err != nil {
 		panic(err)
 	}
 }
