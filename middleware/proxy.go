@@ -8,14 +8,14 @@ import (
 )
 
 func ProxyMiddleware(proxyTarget string) gin.HandlerFunc {
+	target, err := url.Parse(proxyTarget)
+	if err != nil {
+		panic(err)
+	}
+
+	reverseProxy := httputil.NewSingleHostReverseProxy(target)
+
 	return func(ctx *gin.Context) {
-		target, err := url.Parse(proxyTarget)
-		if err != nil {
-			panic(err)
-		}
-
-		reverseProxy := httputil.NewSingleHostReverseProxy(target)
-
 		reverseProxy.ServeHTTP(ctx.Writer, ctx.Request)
 	}
 }
